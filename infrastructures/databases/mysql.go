@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"todolist-backend/infrastructures/config"
 
@@ -14,12 +15,20 @@ func MySQL() *gorm.DB {
 		log.Fatalln(err)
 		return nil
 	}
+	//Connection to Databases
 	dsn := config.Database.User + ":" + config.Database.Password + "@tcp(" + config.Database.Host + ":" + config.Database.Port + ")/" + config.Database.Dbname + "?charset=utf8&parseTime=True&loc=Local"
 	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+	fmt.Println("Connection to Databases Success")
+	//Migration Databases
+	err = Db.AutoMigrate(&Activities{}, &Todos{})
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println("Migration Databases Success")
+
 	return Db
 }
 
