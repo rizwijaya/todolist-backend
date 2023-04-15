@@ -1,24 +1,22 @@
 package controllers
 
 import (
-	repositoryTodo "todolist-backend/modules/v1/todos/interfaces/repositories"
+	todoRepository "todolist-backend/modules/v1/todos/interfaces/repositories"
 	todoUsecase "todolist-backend/modules/v1/todos/usecases"
 
 	"gorm.io/gorm"
 )
 
 type TodoController struct {
-	todoUsecase todoUsecase.UsecasePresenter
+	todoUsecase todoUsecase.TodoAdapter
 }
 
-func NewController(todoUsecase todoUsecase.UsecasePresenter) *TodoController {
-	return &TodoController{todoUsecase}
-}
-
-func UserController(db *gorm.DB) *TodoController {
+func NewTodoController(db *gorm.DB) *TodoController {
 	//Todo
-	repository := repositoryTodo.NewRepository(db)
-	usecase := todoUsecase.NewUsecase(repository)
+	repo := todoRepository.NewTodoRepository(db)
+	tu := todoUsecase.NewTodoUsecase(repo)
 
-	return NewController(usecase)
+	return &TodoController{
+		todoUsecase: tu,
+	}
 }

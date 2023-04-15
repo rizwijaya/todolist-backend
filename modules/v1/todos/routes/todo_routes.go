@@ -8,10 +8,10 @@ import (
 )
 
 func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
-	todoControllerV1 := todoControllerV1.NewController(db)
+	todoControllerV1 := todoControllerV1.NewTodoController(db)
 
-	api := router.Group("/api/v1")
-	api.Get("/", todoControllerV1.Hello)
+	api := router.Group("/todo-items")
+	api.Get("", todoControllerV1.GetAllTodos)
 
 	return router
 }

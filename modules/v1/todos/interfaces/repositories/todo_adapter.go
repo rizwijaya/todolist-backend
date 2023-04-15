@@ -1,14 +1,20 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"todolist-backend/modules/v1/todos/domain"
+
+	"gorm.io/gorm"
+)
 
 type RepositoryPresenter interface {
+	FindAll() ([]domain.Todos, error)
+	FindByGroupId(group_id string) ([]domain.Todos, error)
 }
 
-type Repository struct {
+type TodoRepository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{db}
+func NewTodoRepository(db *gorm.DB) *TodoRepository {
+	return &TodoRepository{db}
 }

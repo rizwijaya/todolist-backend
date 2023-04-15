@@ -1,14 +1,19 @@
 package usecase
 
-import repositoriesTodo "todolist-backend/modules/v1/todos/interfaces/repositories"
+import (
+	"todolist-backend/modules/v1/todos/domain"
+	todoRepository "todolist-backend/modules/v1/todos/interfaces/repositories"
+)
 
-type UsecasePresenter interface {
+type TodoAdapter interface {
+	GetAllTodos() ([]domain.Todos, error)
+	GetTodosByGroupId(group_id string) ([]domain.Todos, error)
 }
 
-type Usecase struct {
-	repository repositoriesTodo.RepositoryPresenter
+type TodoUsecase struct {
+	repoTodo *todoRepository.TodoRepository
 }
 
-func NewUsecase(repositories repositoriesTodo.RepositoryPresenter) *Usecase {
-	return &Usecase{repositories}
+func NewTodoUsecase(repoTodo *todoRepository.TodoRepository) *TodoUsecase {
+	return &TodoUsecase{repoTodo}
 }

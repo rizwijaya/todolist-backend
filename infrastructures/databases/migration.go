@@ -19,6 +19,6 @@ type Todos struct {
 	Activity_group_id int    `gorm:"column:activity_group_id;type:bigint(20);not null"`
 	Title             string `gorm:"column:title;type:varchar(255);not null"`
 	Priority          string `gorm:"column:priority;type:varchar(255);not null"`
-	Is_active         bool   `gorm:"column:is_active;type:boolean;default:true;not null"`
+	Is_active         bool   `gorm:"column:is_active;type:tinyint(1);default:true;not null"`
 	GormModel
 }
