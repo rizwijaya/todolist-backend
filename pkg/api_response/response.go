@@ -8,6 +8,9 @@ func NewErrorResponse(status string, message string) ResponseError {
 }
 
 func NewSuccessResponse(status string, message string, data interface{}) ResponseSuccess {
+	if data == nil {
+		data = struct{}{}
+	}
 	return ResponseSuccess{
 		Status:  status,
 		Message: message,

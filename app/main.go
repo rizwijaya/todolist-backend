@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"gorm.io/gorm"
 )
 
@@ -29,10 +30,7 @@ func main() {
 	router, db := NewRouting()
 
 	if config.App.Mode == "development" {
-		router.Use(func(c *fiber.Ctx) error {
-			log.Println(c.Method(), c.OriginalURL())
-			return c.Next()
-		})
+		router.Use(logger.New())
 	}
 
 	//Routing

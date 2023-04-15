@@ -8,8 +8,14 @@ type GormModel struct {
 }
 
 type Activities struct {
-	Activity_id int    `json:"id" gorm:"column:activity_id"`
-	Title       string `json:"title" gorm:"column:title"`
-	Email       string `json:"email" gorm:"column:email"`
+	ID    int    `json:"id" gorm:"column:activity_id"`
+	Title string `json:"title" gorm:"column:title"`
+	Email string `json:"email" gorm:"column:email" binding:"omitempty,email"`
+	GormModel
+}
+
+type ActivityWithoutEmail struct {
+	ID    int    `json:"id" gorm:"column:activity_id"`
+	Title string `json:"title" gorm:"column:title"`
 	GormModel
 }

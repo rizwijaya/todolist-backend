@@ -9,6 +9,9 @@ import (
 type RepositoryPresenter interface {
 	FindAll() ([]domain.Activities, error)
 	FindByID(id string) (domain.Activities, error)
+	Create(activity domain.Activities) (domain.Activities, error)
+	Update(id string, activity domain.Activities) (domain.Activities, error)
+	Delete(id string) error
 }
 
 type ActivityRepository struct {

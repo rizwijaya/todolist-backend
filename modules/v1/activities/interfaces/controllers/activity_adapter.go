@@ -8,7 +8,7 @@ import (
 )
 
 type ActivityController struct {
-	activityUsecase *activityUsecase.ActivityUsecase
+	activityUsecase activityUsecase.ActivityAdapter
 }
 
 func NewActivityController(db *gorm.DB) *ActivityController {
