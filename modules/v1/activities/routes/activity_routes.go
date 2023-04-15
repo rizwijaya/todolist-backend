@@ -12,6 +12,7 @@ func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
 
 	api := router.Group("/activity-groups")
 	api.Get("", activityControllerV1.GetAllActivity)
+	api.Get("/:id", activityControllerV1.GetActivityByID)
 
 	return router
 }

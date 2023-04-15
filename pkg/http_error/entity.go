@@ -4,4 +4,5 @@ import "errors"
 
 var (
 	ErrActivityNotFound = errors.New("Activity not found")
+	ErrRecordNotfound   = errors.New("record not found")
 )

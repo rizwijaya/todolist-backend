@@ -8,6 +8,7 @@ import (
 
 type RepositoryPresenter interface {
 	FindAll() ([]domain.Activities, error)
+	FindByID(id string) (domain.Activities, error)
 }
 
 type ActivityRepository struct {

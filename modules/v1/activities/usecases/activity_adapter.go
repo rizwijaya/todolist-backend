@@ -7,6 +7,7 @@ import (
 
 type ActivityAdapter interface {
 	GetAllActivity() ([]domain.Activities, error)
+	GetActivityByID(id string) (domain.Activities, error)
 }
 
 type ActivityUsecase struct {
