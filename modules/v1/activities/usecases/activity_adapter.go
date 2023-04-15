@@ -1,14 +1,18 @@
 package usecase
 
-import repositoriesActivity "todolist-backend/modules/v1/activities/interfaces/repositories"
+import (
+	"todolist-backend/modules/v1/activities/domain"
+	activityRepository "todolist-backend/modules/v1/activities/interfaces/repositories"
+)
 
-type UsecasePresenter interface {
+type ActivityAdapter interface {
+	GetAllActivity() ([]domain.Activities, error)
 }
 
-type Usecase struct {
-	repository repositoriesActivity.RepositoryPresenter
+type ActivityUsecase struct {
+	repoActivity *activityRepository.ActivityRepository
 }
 
-func NewUsecase(repositories repositoriesActivity.RepositoryPresenter) *Usecase {
-	return &Usecase{repositories}
+func NewActivityUsecase(repoActivity *activityRepository.ActivityRepository) *ActivityUsecase {
+	return &ActivityUsecase{repoActivity}
 }

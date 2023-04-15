@@ -1,16 +1,16 @@
 package api
 
-func CustomResponse(message string, code int, status string, data interface{}) Response {
-	meta := Meta{
-		Message: message,
-		Code:    code,
+func NewErrorResponse(status string, message string) ResponseError {
+	return ResponseError{
 		Status:  status,
+		Message: message,
 	}
+}
 
-	jsonResponse := Response{
-		Meta: meta,
-		Data: data,
+func NewSuccessResponse(status string, message string, data interface{}) ResponseSuccess {
+	return ResponseSuccess{
+		Status:  status,
+		Message: message,
+		Data:    data,
 	}
-
-	return jsonResponse
 }

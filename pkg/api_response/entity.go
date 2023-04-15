@@ -1,12 +1,12 @@
 package api
 
-type Response struct {
-	Meta Meta        `json:"meta"`
-	Data interface{} `json:"data"`
+type ResponseSuccess struct {
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
-type Meta struct {
-	Message string `json:"message"`
-	Code    int    `json:"code"`
+type ResponseError struct {
 	Status  string `json:"status"`
+	Message string `json:"message"`
 }

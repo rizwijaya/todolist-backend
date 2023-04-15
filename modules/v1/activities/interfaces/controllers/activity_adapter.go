@@ -8,17 +8,15 @@ import (
 )
 
 type ActivityController struct {
-	activityUsecase activityUsecase.UsecasePresenter
+	activityUsecase *activityUsecase.ActivityUsecase
 }
 
-func NewController(activityUsecase activityUsecase.UsecasePresenter) *ActivityController {
-	return &ActivityController{activityUsecase}
-}
-
-func UserController(db *gorm.DB) *ActivityController {
+func NewActivityController(db *gorm.DB) *ActivityController {
 	//Activity
-	repository := repositoryActivity.NewRepository(db)
-	usecase := activityUsecase.NewUsecase(repository)
+	repo := repositoryActivity.NewActivityRepository(db)
+	au := activityUsecase.NewActivityUsecase(repo)
 
-	return NewController(usecase)
+	return &ActivityController{
+		activityUsecase: au,
+	}
 }

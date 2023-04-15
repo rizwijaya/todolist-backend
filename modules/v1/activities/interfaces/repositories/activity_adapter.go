@@ -1,14 +1,19 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"todolist-backend/modules/v1/activities/domain"
+
+	"gorm.io/gorm"
+)
 
 type RepositoryPresenter interface {
+	FindAll() ([]domain.Activities, error)
 }
 
-type Repository struct {
+type ActivityRepository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{db}
+func NewActivityRepository(db *gorm.DB) *ActivityRepository {
+	return &ActivityRepository{db}
 }
