@@ -8,6 +8,7 @@ import (
 type TodoAdapter interface {
 	GetAllTodos() ([]domain.Todos, error)
 	GetTodosByGroupId(group_id string) ([]domain.Todos, error)
+	GetTodoById(id string) (domain.Todos, error)
 }
 
 type TodoUsecase struct {

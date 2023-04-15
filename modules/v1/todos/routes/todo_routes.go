@@ -12,6 +12,7 @@ func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
 
 	api := router.Group("/todo-items")
 	api.Get("", todoControllerV1.GetAllTodos)
+	api.Get("/:id", todoControllerV1.GetTodoById)
 
 	return router
 }

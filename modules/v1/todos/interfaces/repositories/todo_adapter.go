@@ -9,6 +9,7 @@ import (
 type RepositoryPresenter interface {
 	FindAll() ([]domain.Todos, error)
 	FindByGroupId(group_id string) ([]domain.Todos, error)
+	FindById(id string) (domain.Todos, error)
 }
 
 type TodoRepository struct {
