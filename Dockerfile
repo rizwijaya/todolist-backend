@@ -12,7 +12,7 @@ WORKDIR "$APP_HOME"
 RUN go mod tidy
 RUN go build app/main.go
 
-EXPOSE 8090
+EXPOSE 3030
 
 #CMD ["make", "start"]
 ENTRYPOINT [ "./main" ]

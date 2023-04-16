@@ -32,5 +32,5 @@ func main() {
 	router = routesActivityAPIV1.NewRouter(router, db)
 	router = routesTodosAPIV1.NewRouter(router, db)
 
-	router.Listen(config.App.Url + ":" + config.App.Port)
+	router.Listen(":" + config.App.Port)
 }
