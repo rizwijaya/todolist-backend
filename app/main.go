@@ -32,7 +32,7 @@ func main() {
 	router = routesActivityAPIV1.NewRouter(router, db)
 	router = routesTodosAPIV1.NewRouter(router, db)
 	if config.App.Port == "" {
-		config.App.Port = "3000"
+		config.App.Port = "3030"
 	}
 	router.Listen(":" + config.App.Port)
 }
