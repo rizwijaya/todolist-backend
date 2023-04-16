@@ -11,6 +11,9 @@ import (
 
 func MySQL() *gorm.DB {
 	config := config.New()
+	if config.Database.Port == "" {
+		config.Database.Port = "3306"
+	}
 	//Connection to Databases
 	dsn := config.Database.User + ":" + config.Database.Password + "@tcp(" + config.Database.Host + ":" + config.Database.Port + ")/" + config.Database.Dbname + "?charset=utf8&parseTime=True&loc=Local"
 	Db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
