@@ -24,4 +24,4 @@ jobs:
       run: docker build . --file Dockerfile --tag rizwijaya/todolist-backend:$(date +%s)
       
     - name: Docker Push
-      run: docker push rizwijaya/todolist-backend
+      run: docker push rizwijaya/todolist-backend:latest
