@@ -30,7 +30,7 @@ func FormatValidationError(err error) []string {
 func FormValidationError(fe validator.FieldError) string {
 	switch fe.Tag() {
 	case "required":
-		return fe.Field() + " is required!"
+		return fe.Field() + " cannot be null"
 	case "email":
 		return fe.Field() + " must be a valid email address!"
 	case "min":

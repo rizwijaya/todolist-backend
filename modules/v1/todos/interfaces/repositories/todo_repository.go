@@ -19,3 +19,17 @@ func (tr *TodoRepository) FindById(id string) (domain.Todos, error) {
 	err := tr.db.Where("todo_id = ?", id).First(&todo).Error
 	return todo, err
 }
+
+func (tr *TodoRepository) Create(todos domain.Todos) (domain.Todos, error) {
+	err := tr.db.Create(&todos).Error
+	return todos, err
+}
+
+func (tr *TodoRepository) Update(id string, todos domain.Todos) (domain.Todos, error) {
+	err := tr.db.Model(&todos).Where("todo_id = ?", id).Updates(&todos).Error
+	return todos, err
+}
+
+func (tr *TodoRepository) Delete(id string) error {
+	return tr.db.Where("todo_id = ?", id).Delete(&domain.Todos{}).Error
+}
