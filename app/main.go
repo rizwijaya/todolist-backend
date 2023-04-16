@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"todolist-backend/infrastructures/config"
 	database "todolist-backend/infrastructures/databases"
 	routesActivityAPIV1 "todolist-backend/modules/v1/activities/routes"
@@ -22,11 +21,7 @@ func NewRouting() (*fiber.App, *gorm.DB) {
 }
 
 func main() {
-	config, err := config.New()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	config := config.New()
 	router, db := NewRouting()
 
 	if config.App.Mode == "development" {

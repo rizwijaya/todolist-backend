@@ -1,24 +1,30 @@
 package config
 
 import (
-	"errors"
 	"os"
 
-	dotenv "github.com/golobby/dotenv"
+	"github.com/joho/godotenv"
 )
 
-func New() (LoadConfig, error) {
-	conf := LoadConfig{}
-
-	//Load Environment file
-	file, err := os.Open(".env")
+func New() LoadConfig {
+	err := godotenv.Load()
 	if err != nil {
-		return conf, errors.New("error loading .env file")
+		panic(err)
 	}
-
-	err = dotenv.NewDecoder(file).Decode(&conf)
-	if err != nil {
-		return conf, errors.New("cannot decode .env file")
+	return LoadConfig{
+		App: App{
+			Mode:       os.Getenv("APP_MODE"),
+			Name:       os.Getenv("APP_NAME"),
+			Port:       os.Getenv("APP_PORT"),
+			Url:        os.Getenv("APP_URL"),
+			Secret_key: os.Getenv("APP_SECRET_KEY"),
+		},
+		Database: Database{
+			Host:     os.Getenv("MYSQL_HOST"),
+			Port:     os.Getenv("MYSQL_PORT"),
+			User:     os.Getenv("MYSQL_USER"),
+			Password: os.Getenv("MYSQL_PASSWORD"),
+			Dbname:   os.Getenv("MYSQL_DBNAME"),
+		},
 	}
-	return conf, err
 }

@@ -84,7 +84,6 @@ func (uc *ActivityController) UpdateActivity(c *fiber.Ctx) error {
 	var (
 		id             = c.Params("id")
 		UpdateActivity domain.UpdateActivity
-		Validator      = validator.New()
 	)
 	//Parse and validate request body
 	if err := c.BodyParser(&UpdateActivity); err != nil {
@@ -93,13 +92,10 @@ func (uc *ActivityController) UpdateActivity(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 	//Validate request body input
-	err := Validator.Struct(UpdateActivity)
-	if err != nil {
-		for _, v := range err.(validator.ValidationErrors) {
-			log.Println(err)
-			resp := api.NewErrorResponse("Bad Request", http_error.FormValidationError(v))
-			return c.Status(http.StatusBadRequest).JSON(resp)
-		}
+	if UpdateActivity.Title == "" {
+		log.Println("Title is required")
+		resp := api.NewErrorResponse("Bad Request", http_error.ErrTitleRequired)
+		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 
 	activity, err := uc.activityUsecase.UpdateActivity(id, UpdateActivity)
