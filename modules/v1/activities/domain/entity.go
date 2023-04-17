@@ -9,7 +9,7 @@ type GormModel struct {
 
 type Activities struct {
 	ID    int    `json:"id" gorm:"column:activity_id;primaryKey"`
-	Title string `json:"title" gorm:"column:title"`
+	Title string `json:"title" gorm:"column:title" validate:"required"`
 	Email string `json:"email" gorm:"column:email"`
 	GormModel
 }
