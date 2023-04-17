@@ -34,20 +34,6 @@ func FormValidationError(fe validator.FieldError) string {
 	switch fe.Tag() {
 	case "required":
 		return field + " cannot be null"
-	case "email":
-		return field + " must be a valid email address!"
-	case "min":
-		return field + " minimum " + fe.Param() + " characters!"
-	case "max":
-		return field + " maximum " + fe.Param() + " characters!"
-	case "alphanum":
-		return field + " must be alphanumeric!"
-	case "numeric":
-		return field + " must be numeric!"
-	case "eqfield":
-		return field + " must be equal to " + fe.Param() + "!"
-	case "alphanumunicode":
-		return field + " must be alphanumeric unicode!"
 	default:
 		return field + " is invalid!"
 	}

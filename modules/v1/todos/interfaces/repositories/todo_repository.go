@@ -26,10 +26,10 @@ func (tr *TodoRepository) Create(todos domain.Todos) (domain.Todos, error) {
 }
 
 func (tr *TodoRepository) Update(id string, todos domain.Todos) (domain.Todos, error) {
-	err := tr.db.Model(&todos).Where("todo_id = ?", id).Updates(&todos).Error
+	err := tr.db.Model(&todos).Where("todo_id = ?", id).Updates(&todos).First(&todos).Error
 	return todos, err
 }
 
 func (tr *TodoRepository) Delete(id string) error {
-	return tr.db.Where("todo_id = ?", id).Delete(&domain.Todos{}).Error
+	return tr.db.Where("todo_id = ?", id).First(&domain.Todos{}).Delete(&domain.Todos{}).Error
 }

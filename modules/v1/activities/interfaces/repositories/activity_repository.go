@@ -22,10 +22,10 @@ func (ar *ActivityRepository) Create(activity domain.Activities) (domain.Activit
 }
 
 func (ar *ActivityRepository) Update(id string, activity domain.Activities) (domain.Activities, error) {
-	err := ar.db.Model(&activity).Where("activity_id = ?", id).Updates(&activity).Error
+	err := ar.db.Model(&activity).Where("activity_id = ?", id).Updates(&activity).First(&activity).Error
 	return activity, err
 }
 
 func (ar *ActivityRepository) Delete(id string) error {
-	return ar.db.Where("activity_id = ?", id).Delete(&domain.Activities{}).Error
+	return ar.db.Where("activity_id = ?", id).First(&domain.Activities{}).Delete(&domain.Activities{}).Error
 }

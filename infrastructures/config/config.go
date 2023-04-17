@@ -11,11 +11,10 @@ func New() LoadConfig {
 	// }
 	return LoadConfig{
 		App: App{
-			Mode:       os.Getenv("APP_MODE"),
-			Name:       os.Getenv("APP_NAME"),
-			Port:       os.Getenv("APP_PORT"),
-			Url:        os.Getenv("APP_URL"),
-			Secret_key: os.Getenv("APP_SECRET_KEY"),
+			Mode: os.Getenv("APP_MODE"),
+			Name: os.Getenv("APP_NAME"),
+			Port: os.Getenv("APP_PORT"),
+			Url:  os.Getenv("APP_URL"),
 		},
 		Database: Database{
 			Host:     os.Getenv("MYSQL_HOST"),

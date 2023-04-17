@@ -1,11 +1,10 @@
 package config
 
 type App struct {
-	Mode       string `env:"APP_MODE"`
-	Name       string `env:"APP_NAME"`
-	Port       string `env:"APP_PORT"`
-	Url        string `env:"APP_URL"`
-	Secret_key string `env:"APP_SECRET_KEY"`
+	Mode string `env:"APP_MODE"`
+	Name string `env:"APP_NAME"`
+	Port string `env:"APP_PORT"`
+	Url  string `env:"APP_URL"`
 }
 
 type Database struct {

@@ -52,25 +52,25 @@ func (tc *TodoController) GetTodoById(c *fiber.Ctx) error {
 
 func (tc *TodoController) CreateTodo(c *fiber.Ctx) error {
 	var (
-		Validator  = validator.New()
-		insertTodo domain.InsertTodos
+		Validator = validator.New()
+		todo      domain.Todos
 	)
 	//Parse and validate request body
-	err := c.BodyParser(&insertTodo)
+	err := c.BodyParser(&todo)
 	if err != nil {
 		log.Println(err)
 		resp := api.NewErrorResponse("Bad Request", err.Error())
 		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 	//Validate request body input
-	err = Validator.Struct(insertTodo)
+	err = Validator.Struct(todo)
 	if err != nil {
 		for _, v := range err.(validator.ValidationErrors) {
 			if http_error.FormValidationError(v) == http_error.ErrIsActiveNull {
 				sts := true
-				insertTodo.Is_active = &sts
+				todo.Is_active = &sts
 			} else if http_error.FormValidationError(v) == http_error.ErrPriorityNull {
-				insertTodo.Priority = "very-high"
+				todo.Priority = "very-high"
 			} else {
 				log.Println(err)
 				resp := api.NewErrorResponse("Bad Request", http_error.FormValidationError(v))
@@ -79,7 +79,7 @@ func (tc *TodoController) CreateTodo(c *fiber.Ctx) error {
 		}
 	}
 
-	todo, err := tc.todoUsecase.CreateTodo(insertTodo)
+	todo, err = tc.todoUsecase.CreateTodo(todo)
 	if err != nil {
 		log.Println(err)
 		resp := api.NewErrorResponse("Internal Server Error", "Internal Server Error")

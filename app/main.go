@@ -27,10 +27,14 @@ func main() {
 	if config.App.Mode == "development" {
 		router.Use(logger.New())
 	}
-	router.Use(logger.New())
 	//Routing
-	router = routesActivityAPIV1.NewRouter(router, db)
-	router = routesTodosAPIV1.NewRouter(router, db)
+	routing := make(chan *fiber.App)
+	go routesActivityAPIV1.NewRouter(router, db, routing)
+	router = <-routing
+	go routesTodosAPIV1.NewRouter(router, db, routing)
+	router = <-routing
+	// router = routesActivityAPIV1.NewRouter(router, db)
+	// router = routesTodosAPIV1.NewRouter(router, db)
 	if config.App.Port == "" {
 		config.App.Port = "3030"
 	}

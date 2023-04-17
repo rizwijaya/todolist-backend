@@ -42,17 +42,17 @@ func (uc *ActivityController) GetActivityByID(c *fiber.Ctx) error {
 
 func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 	var (
-		InsertActivity domain.InsertActivity
-		Validator      = validator.New()
+		activity  domain.Activities
+		Validator = validator.New()
 	)
 	//Parse and validate request body
-	if err := c.BodyParser(&InsertActivity); err != nil {
+	if err := c.BodyParser(&activity); err != nil {
 		log.Println(err)
 		resp := api.NewErrorResponse("Bad Request", err.Error())
 		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 	//Validate request body input
-	err := Validator.Struct(InsertActivity)
+	err := Validator.Struct(activity)
 	if err != nil {
 		for _, v := range err.(validator.ValidationErrors) {
 			log.Println(err)
@@ -61,12 +61,13 @@ func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 		}
 	}
 
-	activity, err := uc.activityUsecase.CreateActivity(InsertActivity)
+	activity, err = uc.activityUsecase.CreateActivity(activity)
 	if err != nil {
 		log.Println(err)
 		resp := api.NewErrorResponse("Internal Server Error", "Internal Server Error")
 		return c.Status(http.StatusInternalServerError).JSON(resp)
 	}
+
 	if activity.Email == "" {
 		activ := domain.ActivityWithoutEmail{}
 		activ.ID = activity.ID
@@ -82,23 +83,23 @@ func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 
 func (uc *ActivityController) UpdateActivity(c *fiber.Ctx) error {
 	var (
-		id             = c.Params("id")
-		UpdateActivity domain.UpdateActivity
+		id       = c.Params("id")
+		activity domain.Activities
 	)
 	//Parse and validate request body
-	if err := c.BodyParser(&UpdateActivity); err != nil {
+	if err := c.BodyParser(&activity); err != nil {
 		log.Println(err)
 		resp := api.NewErrorResponse("Bad Request", err.Error())
 		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 	//Validate request body input
-	if UpdateActivity.Title == "" {
+	if activity.Title == "" {
 		log.Println("Title is required")
 		resp := api.NewErrorResponse("Bad Request", http_error.ErrTitleRequired)
 		return c.Status(http.StatusBadRequest).JSON(resp)
 	}
 
-	activity, err := uc.activityUsecase.UpdateActivity(id, UpdateActivity)
+	activity, err := uc.activityUsecase.UpdateActivity(id, activity)
 	if err != nil {
 		log.Println(err)
 		if http_error.IsSame(err, http_error.ErrRecordNotfound) {

@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
+func NewRouter(router *fiber.App, db *gorm.DB, routing chan *fiber.App) {
 	todoControllerV1 := todoControllerV1.NewTodoController(db)
 
 	api := router.Group("/todo-items")
@@ -17,5 +17,5 @@ func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
 	api.Patch("/:id", todoControllerV1.UpdateTodo)
 	api.Delete("/:id", todoControllerV1.DeleteTodo)
 
-	return router
+	routing <- router
 }

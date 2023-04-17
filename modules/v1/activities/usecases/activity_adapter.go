@@ -8,8 +8,8 @@ import (
 type ActivityAdapter interface {
 	GetAllActivity() ([]domain.Activities, error)
 	GetActivityByID(id string) (domain.Activities, error)
-	CreateActivity(activity domain.InsertActivity) (domain.Activities, error)
-	UpdateActivity(id string, activity domain.UpdateActivity) (domain.Activities, error)
+	CreateActivity(activity domain.Activities) (domain.Activities, error)
+	UpdateActivity(id string, activity domain.Activities) (domain.Activities, error)
 	DeleteActivity(id string) error
 }
 
