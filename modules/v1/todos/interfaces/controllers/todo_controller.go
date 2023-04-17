@@ -69,9 +69,7 @@ func (tc *TodoController) CreateTodo(c *fiber.Ctx) error {
 			if http_error.FormValidationError(v) == http_error.ErrIsActiveNull {
 				sts := true
 				insertTodo.Is_active = &sts
-			}
-
-			if http_error.FormValidationError(v) == http_error.ErrPriorityNull {
+			} else if http_error.FormValidationError(v) == http_error.ErrPriorityNull {
 				insertTodo.Priority = "very-high"
 			} else {
 				log.Println(err)
