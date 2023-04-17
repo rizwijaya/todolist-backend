@@ -5,6 +5,7 @@
 - [Tentang](#tentang)
 - [Panduan Menjalankan](#panduan-menjalankan)
 - [Struktur Project](#struktur-project)
+- [Documentation API](#documentation-api)
 ---
 
 ### Tentang
@@ -51,3 +52,6 @@ Dari Struktur tersebut dilakukan penyesuaian, dikarenakan dalam Rest API masih m
 | Interface            | Interfaces     |
 | Usecases             | Usecases       |
 | Entities             | Domain         |
+
+### Documentation API
+Untuk melihat dokumentasi API dapat mengunjungi link berikut: [http://localhost:3030/swagger/index.html](http://localhost:3030/swagger/index.html)
