@@ -1,0 +1,15 @@
+basePath: /
+host: localhost:3030
+info:
+  contact:
+    email: admin@rizwijaya.com
+    name: Rizwijaya
+  description: This is a sample server TodoList server.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: TodoList API Documentation
+  version: 1.0.0
+paths: {}
+swagger: "2.0"

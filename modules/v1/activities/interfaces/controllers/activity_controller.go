@@ -11,6 +11,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Summary Get All Activity
+// @Description Get All Activity
+// @Tags Activity
+// @Accept json
+// @Produce json
+// @Success 200 {object} api.SuccessResponse
+// @Failure 500 {object} api.ErrorResponse
+// @Router /activity-groups [get]
 func (uc *ActivityController) GetAllActivity(c *fiber.Ctx) error {
 	activity, err := uc.activityUsecase.GetAllActivity()
 	if err != nil {
@@ -23,6 +31,16 @@ func (uc *ActivityController) GetAllActivity(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(resp)
 }
 
+// @Summary Get Activity By ID
+// @Description Get Activity By ID
+// @Tags Activity
+// @Accept json
+// @Produce json
+// @Param id path string true "Activity ID"
+// @Success 200 {object} api.SuccessResponse
+// @Failure 404 {object} api.ErrorResponse
+// @Failure 500 {object} api.ErrorResponse
+// @Router /activity-groups/{id} [get]
 func (uc *ActivityController) GetActivityByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	activity, err := uc.activityUsecase.GetActivityByID(id)
@@ -40,6 +58,17 @@ func (uc *ActivityController) GetActivityByID(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(resp)
 }
 
+// @Summary Create Activity
+// @Description Create Activity
+// @Tags Activity
+// @Accept json
+// @Produce json
+// @Param title body string true "Activity Title"
+// @Param email body string false "Activity Email"
+// @Success 201 {object} api.SuccessResponse
+// @Failure 400 {object} api.ErrorResponse
+// @Failure 500 {object} api.ErrorResponse
+// @Router /activity-groups [post]
 func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 	var (
 		activity  domain.Activities
@@ -81,6 +110,19 @@ func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 	return c.Status(http.StatusCreated).JSON(resp)
 }
 
+// @Summary Update Activity
+// @Description Update Activity
+// @Tags Activity
+// @Accept json
+// @Produce json
+// @Param id path string true "Activity ID"
+// @Param title body string true "Activity Title"
+// @Param email body string false "Activity Email"
+// @Success 200 {object} api.SuccessResponse
+// @Failure 400 {object} api.ErrorResponse
+// @Failure 404 {object} api.ErrorResponse
+// @Failure 500 {object} api.ErrorResponse
+// @Router /activity-groups/{id} [patch]
 func (uc *ActivityController) UpdateActivity(c *fiber.Ctx) error {
 	var (
 		id       = c.Params("id")
@@ -114,6 +156,16 @@ func (uc *ActivityController) UpdateActivity(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(resp)
 }
 
+// @Summary Delete Activity
+// @Description Delete Activity
+// @Tags Activity
+// @Accept json
+// @Produce json
+// @Param id path string true "Activity ID"
+// @Success 200 {object} api.SuccessResponse
+// @Failure 404 {object} api.ErrorResponse
+// @Failure 500 {object} api.ErrorResponse
+// @Router /activity-groups/{id} [delete]
 func (uc *ActivityController) DeleteActivity(c *fiber.Ctx) error {
 	id := c.Params("id")
 	err := uc.activityUsecase.DeleteActivity(id)
