@@ -1,4 +1,74 @@
 basePath: /
+definitions:
+  api.ResponseError:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  api.ResponseSuccess:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  domain.Activities:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - title
+    type: object
+  domain.Todos:
+    properties:
+      activity_group_id:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      priority:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - activity_group_id
+    - is_active
+    - priority
+    - title
+    type: object
+  domain.UpdateTodos:
+    properties:
+      activity_group_id:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      priority:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
 host: localhost:3030
 info:
   contact:
@@ -11,5 +81,296 @@ info:
   termsOfService: http://swagger.io/terms/
   title: TodoList API Documentation
   version: 1.0.0
-paths: {}
+paths:
+  /activity-groups:
+    get:
+      consumes:
+      - application/json
+      description: Get All Activity
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Get All Activity
+      tags:
+      - Activity
+    post:
+      consumes:
+      - application/json
+      description: Create Activity
+      parameters:
+      - description: Activities Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Activities'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Create Activity
+      tags:
+      - Activity
+  /activity-groups/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Activity
+      parameters:
+      - description: Activity ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Delete Activity
+      tags:
+      - Activity
+    get:
+      consumes:
+      - application/json
+      description: Get Activity By ID
+      parameters:
+      - description: Activity ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Get Activity By ID
+      tags:
+      - Activity
+    patch:
+      consumes:
+      - application/json
+      description: Update Activity
+      parameters:
+      - description: Activity ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Activities Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Activities'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Update Activity
+      tags:
+      - Activity
+  /todo-items:
+    get:
+      consumes:
+      - application/json
+      description: Get All Todos
+      parameters:
+      - description: Activity Group ID
+        in: query
+        name: activity_group_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Get All Todos
+      tags:
+      - Todo
+    post:
+      consumes:
+      - application/json
+      description: Create Todo
+      parameters:
+      - description: Todo Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Todos'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Create Todo
+      tags:
+      - Todo
+  /todo-items/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Delete Todo
+      tags:
+      - Todo
+    get:
+      consumes:
+      - application/json
+      description: Get Todo By ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Get Todo By ID
+      tags:
+      - Todo
+    patch:
+      consumes:
+      - application/json
+      description: Update Todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Todo Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateTodos'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ResponseSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.ResponseError'
+      summary: Update Todo
+      tags:
+      - Todo
 swagger: "2.0"

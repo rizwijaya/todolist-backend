@@ -17,8 +17,8 @@ import (
 // @Accept json
 // @Produce json
 // @Param activity_group_id query string false "Activity Group ID"
-// @Success 200 {object} api.SuccessResponse
-// @Failure 500 {object} api.ErrorResponse
+// @Success 200 {object} api.ResponseSuccess
+// @Failure 500 {object} api.ResponseError
 // @Router /todo-items [get]
 func (tc *TodoController) GetAllTodos(c *fiber.Ctx) error {
 	var (
@@ -47,9 +47,9 @@ func (tc *TodoController) GetAllTodos(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Todo ID"
-// @Success 200 {object} api.SuccessResponse
-// @Failure 404 {object} api.ErrorResponse
-// @Failure 500 {object} api.ErrorResponse
+// @Success 200 {object} api.ResponseSuccess
+// @Failure 404 {object} api.ResponseError
+// @Failure 500 {object} api.ResponseError
 // @Router /todo-items/{id} [get]
 func (tc *TodoController) GetTodoById(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -74,10 +74,10 @@ func (tc *TodoController) GetTodoById(c *fiber.Ctx) error {
 // @Tags Todo
 // @Accept json
 // @Produce json
-// @Param body body domain.Todos true "Todo Body"
-// @Success 201 {object} api.SuccessResponse
-// @Failure 400 {object} api.ErrorResponse
-// @Failure 500 {object} api.ErrorResponse
+// @Param body body domain.Todos true "Todo Request"
+// @Success 201 {object} api.ResponseSuccess
+// @Failure 400 {object} api.ResponseError
+// @Failure 500 {object} api.ResponseError
 // @Router /todo-items [post]
 func (tc *TodoController) CreateTodo(c *fiber.Ctx) error {
 	var (
@@ -126,10 +126,10 @@ func (tc *TodoController) CreateTodo(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "Todo ID"
 // @Param body body domain.UpdateTodos true "Todo Body"
-// @Success 200 {object} api.SuccessResponse
-// @Failure 400 {object} api.ErrorResponse
-// @Failure 404 {object} api.ErrorResponse
-// @Failure 500 {object} api.ErrorResponse
+// @Success 200 {object} api.ResponseSuccess
+// @Failure 400 {object} api.ResponseError
+// @Failure 404 {object} api.ResponseError
+// @Failure 500 {object} api.ResponseError
 // @Router /todo-items/{id} [patch]
 func (tc *TodoController) UpdateTodo(c *fiber.Ctx) error {
 	var Updatetodo domain.UpdateTodos
@@ -163,9 +163,9 @@ func (tc *TodoController) UpdateTodo(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Todo ID"
-// @Success 200 {object} api.SuccessResponse
-// @Failure 404 {object} api.ErrorResponse
-// @Failure 500 {object} api.ErrorResponse
+// @Success 200 {object} api.ResponseSuccess
+// @Failure 404 {object} api.ResponseError
+// @Failure 500 {object} api.ResponseError
 // @Router /todo-items/{id} [delete]
 func (tc *TodoController) DeleteTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
