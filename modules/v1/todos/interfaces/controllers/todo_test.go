@@ -12,6 +12,7 @@ import (
 	"todolist-backend/modules/v1/todos/domain"
 	m_usecaseTodos "todolist-backend/modules/v1/todos/usecases/mock"
 	api "todolist-backend/pkg/api_response"
+	"todolist-backend/pkg/http_error"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang/mock/gomock"
@@ -199,6 +200,118 @@ func TestActivityController_GetAllTodos(t *testing.T) {
 			} else {
 				req = httptest.NewRequest("GET", "/todo-items", nil)
 			}
+			response, err := router.Test(req, -1)
+			assert.NoError(t, err)
+
+			responseData, err := ioutil.ReadAll(response.Body)
+			assert.NoError(t, err)
+
+			//Testing Response and StatusCode
+			assert.Equal(t, tt.statusCode, response.StatusCode)
+			if !tt.wantErr {
+				todoResult := api.ResponseSuccess{}
+				err = json.Unmarshal(responseData, &todoResult)
+				assert.NoError(t, err)
+				assert.Equal(t, todoResult, tt.response)
+			} else {
+				todoResult := api.ResponseError{}
+				err = json.Unmarshal(responseData, &todoResult)
+				assert.NoError(t, err)
+				assert.Equal(t, todoResult, tt.err)
+			}
+		})
+	}
+}
+
+func TestActivityController_GetTodoById(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	now := time.Date(2023, time.April, 15, 10, 0, 0, 0, time.UTC)
+	type tests struct {
+		nameTest    string
+		statusCode  int
+		id          int
+		response    api.ResponseSuccess
+		wantErr     bool
+		err         api.ResponseError
+		usecaseTest func(usecase *m_usecaseTodos.MockTodoAdapter)
+	}
+	//add test case
+	test_cases := []tests{
+		{
+			nameTest:   "Test Case 1 Get Todos By Id: Success",
+			statusCode: http.StatusOK,
+			id:         1,
+			response: api.ResponseSuccess{
+				Status:  "Success",
+				Message: "Success",
+				Data: map[string]interface{}{
+					"id":                float64(1),
+					"activity_group_id": float64(1),
+					"title":             "Todo 1",
+					"is_active":         true,
+					"priority":          "very-high",
+					"createdAt":         "2023-04-15T10:00:00Z",
+					"updatedAt":         "2023-04-15T10:00:00Z",
+				},
+			},
+			wantErr: false,
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				sts := true
+				usecase.EXPECT().GetTodoById("1").Return(domain.Todos{
+					ID:                1,
+					Activity_group_id: 1,
+					Title:             "Todo 1",
+					Is_active:         &sts,
+					Priority:          "very-high",
+					GormModel: domain.GormModel{
+						CreatedAt: &now,
+						UpdatedAt: &now,
+					},
+				}, nil)
+			},
+		},
+		{
+			nameTest:   "Test Case 2 Get Todos By Id: Failed Id Not Found",
+			statusCode: http.StatusNotFound,
+			id:         99999,
+			wantErr:    true,
+			err: api.ResponseError{
+				Status:  "Not Found",
+				Message: "Todo with ID 99999 Not Found",
+			},
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().GetTodoById("99999").Return(domain.Todos{}, http_error.ErrRecordNotfound)
+			},
+		},
+		{
+			nameTest:   "Test Case 3 Get Todos By Id: Failed Internal Server Error",
+			statusCode: http.StatusInternalServerError,
+			id:         999,
+			wantErr:    true,
+			err: api.ResponseError{
+				Status:  "Internal Server Error",
+				Message: "Internal Server Error",
+			},
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().GetTodoById("999").Return(domain.Todos{}, errors.New("failed get data todos from database"))
+			},
+		},
+	}
+
+	for _, tt := range test_cases {
+		t.Run(tt.nameTest, func(t *testing.T) {
+			todoAdapter := m_usecaseTodos.NewMockTodoAdapter(ctrl)
+			controller := &TodoController{
+				todoUsecase: todoAdapter,
+			}
+
+			if tt.usecaseTest != nil {
+				tt.usecaseTest(todoAdapter)
+			}
+			var req *http.Request
+			router := fiber.New()
+			router.Get("/todo-items/:id", controller.GetTodoById)
+			req = httptest.NewRequest("GET", "/todo-items/"+strconv.Itoa(tt.id), nil)
 			response, err := router.Test(req, -1)
 			assert.NoError(t, err)
 
