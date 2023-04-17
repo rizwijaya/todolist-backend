@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 	"todolist-backend/modules/v1/todos/domain"
@@ -330,6 +332,212 @@ func TestActivityController_GetTodoById(t *testing.T) {
 				err = json.Unmarshal(responseData, &todoResult)
 				assert.NoError(t, err)
 				assert.Equal(t, todoResult, tt.err)
+			}
+		})
+	}
+}
+
+func TestActivityController_CreateTodo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	now := time.Date(2023, time.April, 15, 10, 0, 0, 0, time.UTC)
+	type tests struct {
+		nameTest           string
+		statusCode         int
+		request            domain.Todos
+		requestInvalidJSON string
+		response           api.ResponseSuccess
+		wantErr            bool
+		err                api.ResponseError
+		usecaseTest        func(usecase *m_usecaseTodos.MockTodoAdapter)
+	}
+	sts_true := true
+	//add test case
+	test_cases := []tests{
+		{
+			nameTest:   "Test Case 1 Create Todo: Success",
+			statusCode: http.StatusCreated,
+			request: domain.Todos{
+				Activity_group_id: 1,
+				Title:             "Activity 1",
+				Is_active:         &sts_true,
+				Priority:          "very-high",
+			},
+			response: api.ResponseSuccess{
+				Status:  "Success",
+				Message: "Success",
+				Data: map[string]interface{}{
+					"id":                float64(1),
+					"title":             "Activity 1",
+					"activity_group_id": float64(1),
+					"is_active":         true,
+					"priority":          "very-high",
+					"updatedAt":         "2023-04-15T10:00:00Z",
+					"createdAt":         "2023-04-15T10:00:00Z",
+				},
+			},
+			wantErr: false,
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().CreateTodo(domain.Todos{
+					Activity_group_id: 1,
+					Title:             "Activity 1",
+					Is_active:         &sts_true,
+					Priority:          "very-high",
+				}).Return(domain.Todos{
+					ID:                1,
+					Activity_group_id: 1,
+					Title:             "Activity 1",
+					Is_active:         &sts_true,
+					Priority:          "very-high",
+					GormModel: domain.GormModel{
+						CreatedAt: &now,
+						UpdatedAt: &now,
+					},
+				}, nil)
+			},
+		},
+		{
+			nameTest:   "Test Case 2 Create Todo: Failed With Invalid JSON",
+			statusCode: http.StatusBadRequest,
+			requestInvalidJSON: `{
+				"title": "Todo 1",
+			}`,
+			wantErr: true,
+			err: api.ResponseError{
+				Status:  "Bad Request",
+				Message: "invalid character '}' looking for beginning of object key string",
+			},
+		},
+		{
+			nameTest:   "Test Case 3 Create Todo: Without Activity Group Id",
+			statusCode: http.StatusBadRequest,
+			request: domain.Todos{
+				Title:     "Activity 1",
+				Is_active: &sts_true,
+				Priority:  "very-high",
+			},
+			wantErr: true,
+			err: api.ResponseError{
+				Status:  "Bad Request",
+				Message: "activity_group_id cannot be null",
+			},
+		},
+		{
+			nameTest:   "Test Case 4 Create Todo: Without Title",
+			statusCode: http.StatusBadRequest,
+			request: domain.Todos{
+				Activity_group_id: 1,
+				Is_active:         &sts_true,
+				Priority:          "very-high",
+			},
+			wantErr: true,
+			err: api.ResponseError{
+				Status:  "Bad Request",
+				Message: "title cannot be null",
+			},
+		},
+		{
+			nameTest:   "Test Case 5 Create Todo: Success Empty Is Active and Priority",
+			statusCode: http.StatusCreated,
+			request: domain.Todos{
+				Activity_group_id: 1,
+				Title:             "Activity 1",
+			},
+			response: api.ResponseSuccess{
+				Status:  "Success",
+				Message: "Success",
+				Data: map[string]interface{}{
+					"id":                float64(1),
+					"title":             "Activity 1",
+					"activity_group_id": float64(1),
+					"is_active":         true,
+					"priority":          "very-high",
+					"updatedAt":         "2023-04-15T10:00:00Z",
+					"createdAt":         "2023-04-15T10:00:00Z",
+				},
+			},
+			wantErr: false,
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().CreateTodo(domain.Todos{
+					Activity_group_id: 1,
+					Title:             "Activity 1",
+					Is_active:         &sts_true,
+					Priority:          "very-high",
+				}).Return(domain.Todos{
+					ID:                1,
+					Activity_group_id: 1,
+					Title:             "Activity 1",
+					Is_active:         &sts_true,
+					Priority:          "very-high",
+					GormModel: domain.GormModel{
+						CreatedAt: &now,
+						UpdatedAt: &now,
+					},
+				}, nil)
+			},
+		},
+		{
+			nameTest:   "Test Case 6 Create Todo: Failed Internal Server Error",
+			statusCode: http.StatusInternalServerError,
+			request: domain.Todos{
+				Activity_group_id: 1,
+				Title:             "Activity 1",
+			},
+			wantErr: true,
+			err: api.ResponseError{
+				Status:  "Internal Server Error",
+				Message: "Internal Server Error",
+			},
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().CreateTodo(domain.Todos{
+					Activity_group_id: 1,
+					Title:             "Activity 1",
+					Is_active:         &sts_true,
+					Priority:          "very-high",
+				}).Return(domain.Todos{}, errors.New("failed insert data todo to database"))
+			},
+		},
+	}
+
+	for _, tt := range test_cases {
+		t.Run(tt.nameTest, func(t *testing.T) {
+			var req *http.Request
+			todoAdapter := m_usecaseTodos.NewMockTodoAdapter(ctrl)
+			controller := &TodoController{
+				todoUsecase: todoAdapter,
+			}
+
+			if tt.usecaseTest != nil {
+				tt.usecaseTest(todoAdapter)
+			}
+
+			router := fiber.New()
+			router.Post("/todo-items", controller.CreateTodo)
+			if tt.requestInvalidJSON != "" {
+				req = httptest.NewRequest("POST", "/todo-items", strings.NewReader(tt.requestInvalidJSON))
+			} else {
+				val, err := json.Marshal(tt.request)
+				assert.NoError(t, err)
+				req = httptest.NewRequest("POST", "/todo-items", bytes.NewReader(val))
+			}
+			req.Header.Set("Content-Type", "application/json")
+			response, err := router.Test(req, -1)
+			assert.NoError(t, err)
+
+			responseData, err := ioutil.ReadAll(response.Body)
+			assert.NoError(t, err)
+
+			//Testing Response and StatusCode
+			assert.Equal(t, tt.statusCode, response.StatusCode)
+			if !tt.wantErr {
+				activityResult := api.ResponseSuccess{}
+				err = json.Unmarshal(responseData, &activityResult)
+				assert.NoError(t, err)
+				assert.Equal(t, activityResult, tt.response)
+			} else {
+				activityResult := api.ResponseError{}
+				err = json.Unmarshal(responseData, &activityResult)
+				assert.NoError(t, err)
+				assert.Equal(t, activityResult, tt.err)
 			}
 		})
 	}

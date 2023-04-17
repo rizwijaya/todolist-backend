@@ -12,6 +12,6 @@ type Todos struct {
 	Activity_group_id int    `json:"activity_group_id" gorm:"column:activity_group_id"  validate:"required"`
 	Title             string `json:"title" gorm:"column:title" validate:"required"`
 	Is_active         *bool  `json:"is_active" gorm:"column:is_active" validate:"required"`
-	Priority          string `json:"priority" gorm:"column:priority;default:'very-high'" validate:"omitempty"`
+	Priority          string `json:"priority" gorm:"column:priority" validate:"required"`
 	GormModel
 }
