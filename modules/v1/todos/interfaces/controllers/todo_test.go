@@ -706,3 +706,97 @@ func TestActivityController_UpdateTodo(t *testing.T) {
 		})
 	}
 }
+
+func TestActivityController_DeleteTodo(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	type tests struct {
+		nameTest    string
+		statusCode  int
+		id          int
+		response    api.ResponseSuccess
+		wantErr     bool
+		err         api.ResponseError
+		usecaseTest func(usecase *m_usecaseTodos.MockTodoAdapter)
+	}
+	//add test case
+	test_cases := []tests{
+		{
+			nameTest:   "Test Case 1 Delete Todos: Success",
+			statusCode: http.StatusOK,
+			id:         1,
+			response: api.ResponseSuccess{
+				Status:  "Success",
+				Message: "Success",
+				Data:    map[string]interface{}{},
+			},
+			wantErr: false,
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().DeleteTodo("1").Return(nil)
+			},
+		},
+		{
+			nameTest:   "Test Case 2 Delete Todos: Failed Id Not Found",
+			statusCode: http.StatusNotFound,
+			id:         9999,
+			wantErr:    true,
+			err: api.ResponseError{
+				Status:  "Not Found",
+				Message: "Todo with ID 9999 Not Found",
+			},
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().DeleteTodo("9999").Return(http_error.ErrRecordNotfound)
+			},
+		},
+		{
+			nameTest:   "Test Case 3 Delete Todos: Failed Internal Server Error",
+			statusCode: http.StatusInternalServerError,
+			id:         122,
+			wantErr:    true,
+			err: api.ResponseError{
+				Status:  "Internal Server Error",
+				Message: "Internal Server Error",
+			},
+			usecaseTest: func(usecase *m_usecaseTodos.MockTodoAdapter) {
+				usecase.EXPECT().DeleteTodo("122").Return(errors.New("failed to delete todos for database"))
+			},
+		},
+	}
+
+	for _, tt := range test_cases {
+		t.Run(tt.nameTest, func(t *testing.T) {
+			var req *http.Request
+			todoAdapter := m_usecaseTodos.NewMockTodoAdapter(ctrl)
+			controller := &TodoController{
+				todoUsecase: todoAdapter,
+			}
+
+			if tt.usecaseTest != nil {
+				tt.usecaseTest(todoAdapter)
+			}
+
+			router := fiber.New()
+			router.Delete("/todo-items/:id", controller.DeleteTodo)
+			req = httptest.NewRequest("DELETE", "/todo-items/"+strconv.Itoa(tt.id), nil)
+			req.Header.Set("Content-Type", "application/json")
+			response, err := router.Test(req, -1)
+			assert.NoError(t, err)
+
+			responseData, err := ioutil.ReadAll(response.Body)
+			assert.NoError(t, err)
+
+			//Testing Response and StatusCode
+			assert.Equal(t, tt.statusCode, response.StatusCode)
+			if !tt.wantErr {
+				activityResult := api.ResponseSuccess{}
+				err = json.Unmarshal(responseData, &activityResult)
+				assert.NoError(t, err)
+				assert.Equal(t, activityResult, tt.response)
+			} else {
+				activityResult := api.ResponseError{}
+				err = json.Unmarshal(responseData, &activityResult)
+				assert.NoError(t, err)
+				assert.Equal(t, activityResult, tt.err)
+			}
+		})
+	}
+}
