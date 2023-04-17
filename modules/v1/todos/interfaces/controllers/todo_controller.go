@@ -74,7 +74,7 @@ func (tc *TodoController) GetTodoById(c *fiber.Ctx) error {
 // @Tags Todo
 // @Accept json
 // @Produce json
-// @Param body body domain.Todos true "Todo Request"
+// @Param body body domain.InsertTodos  true "Todo Request"
 // @Success 201 {object} api.ResponseSuccess
 // @Failure 400 {object} api.ResponseError
 // @Failure 500 {object} api.ResponseError

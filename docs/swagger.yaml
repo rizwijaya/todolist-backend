@@ -15,28 +15,18 @@ definitions:
       status:
         type: string
     type: object
-  domain.Activities:
+  domain.InsertActivity:
     properties:
-      createdAt:
-        type: string
       email:
         type: string
-      id:
-        type: integer
       title:
-        type: string
-      updatedAt:
         type: string
     required:
     - title
     type: object
-  domain.Todos:
+  domain.InsertTodos:
     properties:
       activity_group_id:
-        type: integer
-      createdAt:
-        type: string
-      id:
         type: integer
       is_active:
         type: boolean
@@ -44,29 +34,25 @@ definitions:
         type: string
       title:
         type: string
-      updatedAt:
+    type: object
+  domain.UpdateActivity:
+    properties:
+      email:
+        type: string
+      title:
         type: string
     required:
-    - activity_group_id
-    - is_active
-    - priority
     - title
     type: object
   domain.UpdateTodos:
     properties:
       activity_group_id:
         type: integer
-      createdAt:
-        type: string
-      id:
-        type: integer
       is_active:
         type: boolean
       priority:
         type: string
       title:
-        type: string
-      updatedAt:
         type: string
     type: object
 host: localhost:3030
@@ -111,7 +97,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.Activities'
+          $ref: '#/definitions/domain.InsertActivity'
       produces:
       - application/json
       responses:
@@ -202,7 +188,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.Activities'
+          $ref: '#/definitions/domain.UpdateActivity'
       produces:
       - application/json
       responses:
@@ -259,7 +245,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.Todos'
+          $ref: '#/definitions/domain.InsertTodos'
       produces:
       - application/json
       responses:

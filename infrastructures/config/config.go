@@ -2,15 +2,13 @@ package config
 
 import (
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func New() LoadConfig {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	panic(err)
+	// }
 	return LoadConfig{
 		App: App{
 			Mode: os.Getenv("APP_MODE"),

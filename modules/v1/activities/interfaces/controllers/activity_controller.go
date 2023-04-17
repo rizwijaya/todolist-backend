@@ -63,7 +63,7 @@ func (uc *ActivityController) GetActivityByID(c *fiber.Ctx) error {
 // @Tags Activity
 // @Accept json
 // @Produce json
-// @Param body body domain.Activities true "Activities Request"
+// @Param body body domain.InsertActivity true "Activities Request"
 // @Success 201 {object} api.ResponseSuccess
 // @Failure 400 {object} api.ResponseError
 // @Failure 500 {object} api.ResponseError
@@ -115,7 +115,7 @@ func (uc *ActivityController) CreateActivity(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Activity ID"
-// @Param body body domain.Activities true "Activities Request"
+// @Param body body domain.UpdateActivity true "Activities Request"
 // @Success 200 {object} api.ResponseSuccess
 // @Failure 400 {object} api.ResponseError
 // @Failure 404 {object} api.ResponseError

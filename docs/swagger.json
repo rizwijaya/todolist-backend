@@ -64,7 +64,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Activities"
+                            "$ref": "#/definitions/domain.InsertActivity"
                         }
                     }
                 ],
@@ -201,7 +201,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Activities"
+                            "$ref": "#/definitions/domain.UpdateActivity"
                         }
                     }
                 ],
@@ -288,7 +288,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Todos"
+                            "$ref": "#/definitions/domain.InsertTodos"
                         }
                     }
                 ],
@@ -482,45 +482,24 @@
                 }
             }
         },
-        "domain.Activities": {
+        "domain.InsertActivity": {
             "type": "object",
             "required": [
                 "title"
             ],
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "title": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
         },
-        "domain.Todos": {
+        "domain.InsertTodos": {
             "type": "object",
-            "required": [
-                "activity_group_id",
-                "is_active",
-                "priority",
-                "title"
-            ],
             "properties": {
                 "activity_group_id": {
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "is_active": {
@@ -531,8 +510,19 @@
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.UpdateActivity": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
                 },
-                "updatedAt": {
+                "title": {
                     "type": "string"
                 }
             }
@@ -543,12 +533,6 @@
                 "activity_group_id": {
                     "type": "integer"
                 },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "is_active": {
                     "type": "boolean"
                 },
@@ -556,9 +540,6 @@
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }

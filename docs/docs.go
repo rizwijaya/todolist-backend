@@ -71,7 +71,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Activities"
+                            "$ref": "#/definitions/domain.InsertActivity"
                         }
                     }
                 ],
@@ -208,7 +208,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Activities"
+                            "$ref": "#/definitions/domain.UpdateActivity"
                         }
                     }
                 ],
@@ -295,7 +295,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Todos"
+                            "$ref": "#/definitions/domain.InsertTodos"
                         }
                     }
                 ],
@@ -489,45 +489,24 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Activities": {
+        "domain.InsertActivity": {
             "type": "object",
             "required": [
                 "title"
             ],
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "integer"
-                },
                 "title": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
         },
-        "domain.Todos": {
+        "domain.InsertTodos": {
             "type": "object",
-            "required": [
-                "activity_group_id",
-                "is_active",
-                "priority",
-                "title"
-            ],
             "properties": {
                 "activity_group_id": {
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
                     "type": "integer"
                 },
                 "is_active": {
@@ -538,8 +517,19 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.UpdateActivity": {
+            "type": "object",
+            "required": [
+                "title"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
                 },
-                "updatedAt": {
+                "title": {
                     "type": "string"
                 }
             }
@@ -550,12 +540,6 @@ const docTemplate = `{
                 "activity_group_id": {
                     "type": "integer"
                 },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
                 "is_active": {
                     "type": "boolean"
                 },
@@ -563,9 +547,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
