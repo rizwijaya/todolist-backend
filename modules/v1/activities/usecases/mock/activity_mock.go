@@ -31,7 +31,7 @@ func (m *MockActivityAdapter) EXPECT() *MockActivityAdapterMockRecorder {
 }
 
 // CreateActivity mocks base method.
-func (m *MockActivityAdapter) CreateActivity(activity domain.InsertActivity) (domain.Activities, error) {
+func (m *MockActivityAdapter) CreateActivity(activity domain.Activities) (domain.Activities, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateActivity", activity)
 	ret0, _ := ret[0].(domain.Activities)
@@ -90,7 +90,7 @@ func (mr *MockActivityAdapterMockRecorder) GetAllActivity() *gomock.Call {
 }
 
 // UpdateActivity mocks base method.
-func (m *MockActivityAdapter) UpdateActivity(id string, activity domain.UpdateActivity) (domain.Activities, error) {
+func (m *MockActivityAdapter) UpdateActivity(id string, activity domain.Activities) (domain.Activities, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateActivity", id, activity)
 	ret0, _ := ret[0].(domain.Activities)

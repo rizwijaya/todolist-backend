@@ -27,6 +27,7 @@ func main() {
 	if config.App.Mode == "development" {
 		router.Use(logger.New())
 	}
+
 	//Routing
 	router = routesActivityAPIV1.NewRouter(router, db)
 	router = routesTodosAPIV1.NewRouter(router, db)
