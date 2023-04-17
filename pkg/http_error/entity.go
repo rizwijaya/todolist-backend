@@ -5,7 +5,8 @@ import "errors"
 var (
 	ErrActivityNotFound = errors.New("activity not found")
 	ErrRecordNotfound   = errors.New("record not found")
-	ErrIsActiveNull     = "Is_active cannot be null"
+	ErrIsActiveNull     = "is_active cannot be null"
+	ErrPriorityNull     = "priority cannot be null"
 	ErrTitleRequired    = "title is required"
 )
 

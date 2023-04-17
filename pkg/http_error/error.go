@@ -1,6 +1,8 @@
 package http_error
 
 import (
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -28,24 +30,25 @@ func FormatValidationError(err error) []string {
 }
 
 func FormValidationError(fe validator.FieldError) string {
+	field := strings.ToLower(fe.Field())
 	switch fe.Tag() {
 	case "required":
-		return fe.Field() + " cannot be null"
+		return field + " cannot be null"
 	case "email":
-		return fe.Field() + " must be a valid email address!"
+		return field + " must be a valid email address!"
 	case "min":
-		return fe.Field() + " minimum " + fe.Param() + " characters!"
+		return field + " minimum " + fe.Param() + " characters!"
 	case "max":
-		return fe.Field() + " maximum " + fe.Param() + " characters!"
+		return field + " maximum " + fe.Param() + " characters!"
 	case "alphanum":
-		return fe.Field() + " must be alphanumeric!"
+		return field + " must be alphanumeric!"
 	case "numeric":
-		return fe.Field() + " must be numeric!"
+		return field + " must be numeric!"
 	case "eqfield":
-		return fe.Field() + " must be equal to " + fe.Param() + "!"
+		return field + " must be equal to " + fe.Param() + "!"
 	case "alphanumunicode":
-		return fe.Field() + " must be alphanumeric unicode!"
+		return field + " must be alphanumeric unicode!"
 	default:
-		return fe.Field() + " is invalid!"
+		return field + " is invalid!"
 	}
 }
