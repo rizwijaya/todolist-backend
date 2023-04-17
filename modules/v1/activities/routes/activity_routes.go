@@ -7,14 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewRouter(router *fiber.App, db *gorm.DB, routing chan *fiber.App) {
+func NewRouter(router *fiber.App, db *gorm.DB) *fiber.App {
 	activityControllerV1 := activityControllerV1.NewActivityController(db)
 
 	api := router.Group("/activity-groups")
-	api.Get("", activityControllerV1.GetAllActivity)
-	api.Get("/:id", activityControllerV1.GetActivityByID)
-	api.Post("", activityControllerV1.CreateActivity)
-	api.Patch("/:id", activityControllerV1.UpdateActivity)
-	api.Delete("/:id", activityControllerV1.DeleteActivity)
-	routing <- router
+	{
+		api.Get("", activityControllerV1.GetAllActivity)
+		api.Get("/:id", activityControllerV1.GetActivityByID)
+		api.Post("", activityControllerV1.CreateActivity)
+		api.Patch("/:id", activityControllerV1.UpdateActivity)
+		api.Delete("/:id", activityControllerV1.DeleteActivity)
+	}
+
+	return router
 }
